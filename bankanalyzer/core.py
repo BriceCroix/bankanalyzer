@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 import sys
 from typing import List, Tuple
 from dataclasses import dataclass
@@ -179,6 +180,16 @@ class BankAccountRecord:
             count += 1
         average /= count
         return average
+
+    @staticmethod
+    def load_in_dir(path: str) -> List[BankAccountRecord]:
+        """
+        Load every ofx file found in the given directory.
+        :param path: Directory containing ofx files.
+        :return:
+        """
+        filenames = [str(f) for f in pathlib.Path(path).rglob('*.ofx')]
+        return BankAccountRecord.load_from_ofx(filenames)
 
     @staticmethod
     def load_from_ofx(filenames: str | List[str]) -> List[BankAccountRecord]:
