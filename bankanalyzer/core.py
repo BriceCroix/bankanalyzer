@@ -130,6 +130,14 @@ class BankAccountRecord:
         if other.start_time < self.start_time:
             self.start_time = other.start_time
 
+    @staticmethod
+    def _draw_alternate_month_colors(ax, start: Date, stop: Date):
+        for year in range(start.year, stop.year+1):
+            for month in range(1, 12+1, 2):
+                left = Date(year=year, month=month, day=1)
+                right = Date(year=year, month=month+1, day=1)
+                ax.axvspan(left, right, facecolor='gray', alpha=0.2)
+
     def show_plot(self):
         """
         Plots the current record. Pauses program to show.
@@ -141,11 +149,17 @@ class BankAccountRecord:
         amounts = [balance.amount for balance in balances]
 
         fig, ax = plt.subplots()
+
+        # Draw background
+        BankAccountRecord._draw_alternate_month_colors(ax, self.start_time, self.end_time)
+
+        # Draw line
         ax.plot(dates, amounts)
         ax.set_title(f'Bank records for account {self.name}')
         ax.set_xlabel('Date')
         ax.set_ylabel(f'Balance ({self.currency})')
-        ax.grid()
+        ax.set_xlim(self.start_time, self.end_time)
+        ax.yaxis.grid()
         fig.tight_layout()
         plt.show()
 
@@ -283,8 +297,12 @@ class BankAccountRecord:
             value /= count
             average_line.append(value)
 
-        # Finally plot graph
         fig, ax = plt.subplots()
+
+        # Draw background
+        BankAccountRecord._draw_alternate_month_colors(ax, start_time, end_time)
+
+        # Finally plot grap
         ax.stackplot(dates, data.values(),
                      labels=data.keys())
         ax.plot(dates, average_line, label=f'{average_on_days}-days avg', linestyle='--')
