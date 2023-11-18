@@ -141,9 +141,10 @@ class BankAccountRecord:
                 right = Date(year=year, month=month + 1, day=1)
                 ax.axvspan(left, right, facecolor='gray', alpha=0.15)
 
-    def show_plot(self):
+    def plot(self, show: bool = True):
         """
         Plots the current record. Pauses program to show.
+        :param show: if true, the plots is immediately showed, otherwise caller must call plt.show()
         :return: None
         """
 
@@ -164,7 +165,9 @@ class BankAccountRecord:
         ax.set_xlim(self.start_time, self.end_time)
         ax.yaxis.grid()
         fig.tight_layout()
-        plt.show()
+
+        if show:
+            plt.show()
 
     def get_average_transaction(self) -> float:
         """
@@ -269,12 +272,13 @@ class BankAccountRecord:
         return output
 
     @staticmethod
-    def stack_plot_account_records(accounts: List[BankAccountRecord], short_period: bool = False):
+    def stack_plot_account_records(accounts: List[BankAccountRecord], short_period: bool = False, show: bool = True):
         """
         Creates and shows a stack plot of given bank accounts.
         :param accounts: Accounts to show.
         :param short_period: if true, will only show dates where all accounts have data.
             Otherwise, the plot is extended as far as possible, as long as at least one account has data.
+        :param show: if true, the plots is immediately showed, otherwise caller must call plt.show()
         """
         if len(accounts) < 1:
             return
@@ -345,7 +349,9 @@ class BankAccountRecord:
         ax.yaxis.grid()
 
         fig.tight_layout()
-        plt.show()
+
+        if show:
+            plt.show()
 
 
 BANKANALYZER_CONFIG_NAME: str = 'bankanalyzer_config.json'
@@ -366,5 +372,3 @@ class BankAnalyzerConfig:
         with open(filename, 'r') as f:
             json_str += f.read()
         return BankAnalyzerConfig.from_json(json_str)
-
-

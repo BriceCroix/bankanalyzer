@@ -6,5 +6,5 @@ def process(directory: str):
     accounts = BankAccountRecord.merge_account_records(accounts)
 
     for account in accounts:
-        account.show_plot()
-    BankAccountRecord.stack_plot_account_records(accounts)
+        account.plot(show=False)
+    BankAccountRecord.stack_plot_account_records(accounts, show=True)
