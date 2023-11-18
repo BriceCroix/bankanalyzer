@@ -3,10 +3,10 @@ from PyQt6.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QWidge
 import sys
 from pathlib import Path
 
-from bankanalyzer.process import process
+from process import process
 
 
-class MainWindow(QWidget):
+class BankAnalyzerMainWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -39,15 +39,18 @@ class MainWindow(QWidget):
 
     def process(self):
         process(self.dir_name_edit.text())
+        # TODO : embed plots in qt : https://matplotlib.org/stable/gallery/user_interfaces/embedding_in_qt_sgskip.html
+
+    @staticmethod
+    def execute():
+        app = QApplication(sys.argv)
+        window = BankAnalyzerMainWindow()
+        window.show()
+        app.exec()
 
 
 def main():
-    app = QApplication(sys.argv)
-
-    window = MainWindow()
-    window.show()
-
-    app.exec()
+    BankAnalyzerMainWindow.execute()
 
 
 if __name__ == '__main__':
