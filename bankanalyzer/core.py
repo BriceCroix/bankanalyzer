@@ -197,16 +197,17 @@ class BankAccountRecord:
         # Search for a "bankanalyzer_config.json" file with names for accounts. Create it if absent, Update if present
         config_path = pathlib.Path(path, BANKANALYZER_CONFIG_NAME)
 
-        if config_path.is_file():
-            config = BankAnalyzerConfig.read_json(str(config_path))
-            for account in accounts:
-                if account.account_id in config.accounts_id_to_name:
-                    account.name = config.accounts_id_to_name[account.account_id]
-                else:
-                    config.accounts_id_to_name[account.account_id] = account.account_id
-        else:
-            config = BankAnalyzerConfig({account.account_id: account.account_id for account in accounts})
-        config.write_json(str(config_path))
+        if len(accounts) > 0:
+            if config_path.is_file():
+                config = BankAnalyzerConfig.read_json(str(config_path))
+                for account in accounts:
+                    if account.account_id in config.accounts_id_to_name:
+                        account.name = config.accounts_id_to_name[account.account_id]
+                    else:
+                        config.accounts_id_to_name[account.account_id] = account.account_id
+            else:
+                config = BankAnalyzerConfig({account.account_id: account.account_id for account in accounts})
+            config.write_json(str(config_path))
 
         return accounts
 
