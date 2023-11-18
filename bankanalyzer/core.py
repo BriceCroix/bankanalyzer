@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import pathlib
 import sys
-from typing import List, Tuple
-from dataclasses import dataclass
+from typing import List, Tuple, Dict
+from dataclasses import dataclass, asdict
+
+from dataclasses_json import dataclass_json
 from ofxparse import OfxParser
 from datetime import date as Date, timedelta as TimeDelta
 import matplotlib.pyplot as plt
@@ -133,11 +135,11 @@ class BankAccountRecord:
 
     @staticmethod
     def _draw_alternate_month_colors(ax, start: Date, stop: Date):
-        for year in range(start.year, stop.year+1):
-            for month in range(1, 12+1, 2):
+        for year in range(start.year, stop.year + 1):
+            for month in range(1, 12 + 1, 2):
                 left = Date(year=year, month=month, day=1)
-                right = Date(year=year, month=month+1, day=1)
-                ax.axvspan(left, right, facecolor='gray', alpha=0.2)
+                right = Date(year=year, month=month + 1, day=1)
+                ax.axvspan(left, right, facecolor='gray', alpha=0.15)
 
     def show_plot(self):
         """
@@ -156,7 +158,7 @@ class BankAccountRecord:
 
         # Draw line
         ax.plot(dates, amounts)
-        ax.set_title(f'Bank records for account {self.name}')
+        ax.set_title(f'Bank records for account "{self.name}"')
         ax.set_xlabel('Date')
         ax.set_ylabel(f'Balance ({self.currency})')
         ax.set_xlim(self.start_time, self.end_time)
@@ -185,11 +187,28 @@ class BankAccountRecord:
     def load_in_dir(path: str) -> List[BankAccountRecord]:
         """
         Load every ofx file found in the given directory.
+        Also search for a "bankanalyzer_config.json" file to give names to accounts in the OFXs.
         :param path: Directory containing ofx files.
         :return:
         """
         filenames = [str(f) for f in pathlib.Path(path).rglob('*.ofx')]
-        return BankAccountRecord.load_from_ofx(filenames)
+        accounts = BankAccountRecord.load_from_ofx(filenames)
+
+        # Search for a "bankanalyzer_config.json" file with names for accounts. Create it if absent, Update if present
+        config_path = pathlib.Path(path, BANKANALYZER_CONFIG_NAME)
+
+        if config_path.is_file():
+            config = BankAnalyzerConfig.read_json(str(config_path))
+            for account in accounts:
+                if account.account_id in config.accounts_id_to_name:
+                    account.name = config.accounts_id_to_name[account.account_id]
+                else:
+                    config.accounts_id_to_name[account.account_id] = account.account_id
+        else:
+            config = BankAnalyzerConfig({account.account_id: account.account_id for account in accounts})
+        config.write_json(str(config_path))
+
+        return accounts
 
     @staticmethod
     def load_from_ofx(filenames: str | List[str]) -> List[BankAccountRecord]:
@@ -316,12 +335,35 @@ class BankAccountRecord:
         # Finally plot grap
         ax.stackplot(dates, data.values(),
                      labels=data.keys())
-        ax.plot(dates, average_line, label=f'{average_on_days}-days avg', linestyle='--')
+        ax.plot(dates, average_line, label=f'{average_on_days}-days average', linestyle='--')
         ax.legend(reverse=True, loc='lower right')
         ax.set_title(f'Accounts balance between {start_time} and {end_time}')
         ax.set_xlabel('Time')
         ax.set_ylabel(f'Balance ({currency})')
-        ax.grid()
+        ax.set_xlim(start_time, end_time)
+        ax.yaxis.grid()
 
         fig.tight_layout()
         plt.show()
+
+
+BANKANALYZER_CONFIG_NAME: str = 'bankanalyzer_config.json'
+
+
+@dataclass_json
+@dataclass
+class BankAnalyzerConfig:
+    accounts_id_to_name: Dict[str, str]
+
+    def write_json(self, filename: str):
+        with open(filename, 'w') as f:
+            f.write(self.to_json(indent=4))
+
+    @staticmethod
+    def read_json(filename: str) -> BankAnalyzerConfig:
+        json_str = ''
+        with open(filename, 'r') as f:
+            json_str += f.read()
+        return BankAnalyzerConfig.from_json(json_str)
+
+
