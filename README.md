@@ -1,5 +1,9 @@
 # bankanalyzer
 
+BankAnalyzer is a (very) simple application that takes a directory as an input, searches for every OFX file in it, and
+outputs plots of the bank account records found in these files.
+
+It is also possible to specify aliases for the discovered bank accounts in a json file.
 
 ## Developer's corner
 
@@ -8,7 +12,7 @@ Configure virtual environment :
 - On windows :
 ```shell
 py -m venv venv
-.\env\Scripts\activate
+.\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
