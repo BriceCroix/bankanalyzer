@@ -5,6 +5,9 @@ from pathlib import Path
 
 from process import process
 
+import matplotlib
+matplotlib.use('qtagg')
+
 
 class BankAnalyzerMainWindow(QWidget):
     def __init__(self, *args, **kwargs):
