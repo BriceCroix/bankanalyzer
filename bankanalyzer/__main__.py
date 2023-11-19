@@ -3,16 +3,22 @@ import argparse
 from gui import BankAnalyzerMainWindow
 from process import process
 
-parser = argparse.ArgumentParser(
-    prog='bankanalyzer',
-    description='Uses ofx files to plot bank account records.',
-    epilog='')
 
-parser.add_argument('dir_name', nargs='?', help='Directory to analyze. GUI is opened if nothing is specified')
+def main():
+    parser = argparse.ArgumentParser(
+        prog='bankanalyzer',
+        description='Uses ofx files to plot bank account records.',
+        epilog='')
 
-args = parser.parse_args()
+    parser.add_argument('dir_name', nargs='?', help='Directory to analyze. GUI is opened if nothing is specified')
 
-if args.dir_name is None:
-    BankAnalyzerMainWindow.execute()
-else:
-    process(args.dir_name)
+    args = parser.parse_args()
+
+    if args.dir_name is None:
+        BankAnalyzerMainWindow.execute()
+    else:
+        process(args.dir_name)
+
+
+if __name__ == "__main__":
+    main()
