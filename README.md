@@ -31,11 +31,17 @@ pip install my_new_package
 pip freeze > requirements.txt
 ```
 
-You are now ready to execute `bankanalyzer` with :
+You are now ready to execute `bankanalyzer`'s GUI with :
 
 ```shell
 python3 bankanalyzer
 ```
+
+Or directly :
+```shell
+python3 bankanalyzer path/to/ofx/folder
+```
+
 
 The executable `bankanalyzer` can be compiled to a single executable with [pyinstaller](https://pypi.org/project/pyinstaller/) :
 

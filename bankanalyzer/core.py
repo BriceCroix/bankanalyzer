@@ -243,7 +243,8 @@ class BankAccountRecord:
                                                       account_id=account.account_id,
                                                       transactions=transactions,
                                                       reference_balance=BankAccountBalance(
-                                                          account.statement.available_balance_date.date(),
+                                                          #account.statement.available_balance_date.date(),
+                                                          account.statement.end_date.date(),
                                                           account.statement.available_balance),
                                                       currency=account.curdef,
                                                       start_time=account.statement.start_date.date(),
