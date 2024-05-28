@@ -1,6 +1,6 @@
 import sys
 
-from core import BankAccountRecord
+from .core import BankAccountRecord
 
 
 def process(directory: str):

@@ -1,7 +1,7 @@
 import argparse
 
-from gui import BankAnalyzerMainWindow
-from process import process
+from .gui import BankAnalyzerMainWindow
+from .process import process
 
 
 def main():

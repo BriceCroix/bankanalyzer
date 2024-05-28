@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QWidge
 import sys
 from pathlib import Path
 
-from process import process
+from .process import process
 
 import matplotlib
 matplotlib.use('qtagg')

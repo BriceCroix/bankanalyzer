@@ -34,12 +34,12 @@ pip freeze > requirements.txt
 You are now ready to execute `bankanalyzer`'s GUI with :
 
 ```shell
-python3 bankanalyzer
+python3 -m bankanalyzer
 ```
 
 Or directly :
 ```shell
-python3 bankanalyzer path/to/ofx/folder
+python3 -m bankanalyzer path/to/ofx/folder
 ```
 
 
@@ -52,5 +52,5 @@ The executable `bankanalyzer` can be compiled to a single executable with [pyins
 
 - On windows :
 ```shell
-pyinstaller --clean --onefile --paths venv\Lib\site-packages --paths .\bankanalyzer\ --name "bankanalyzer" .\bankanalyzer\__main__.py
+pyinstaller --clean --onefile --paths venv\Lib\site-packages --name "bankanalyzer" exe.py
 ```

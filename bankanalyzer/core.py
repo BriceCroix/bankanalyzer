@@ -338,7 +338,7 @@ class BankAccountRecord:
         # Draw background
         BankAccountRecord._draw_alternate_month_colors(ax, start_time, end_time)
 
-        # Finally plot grap
+        # Finally plot graph
         ax.stackplot(dates, data.values(),
                      labels=data.keys())
         ax.plot(dates, average_line, label=f'{average_on_days}-days average', linestyle='--')
